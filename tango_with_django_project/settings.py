@@ -95,6 +95,8 @@ USE_I18N = True
 
 USE_L10N = True
 
+LOGIN_URL = '/rango/login/'
+
 USE_TZ = True
 
 
