@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block title %}Index{% endblock %} <
 {% block body_block %}
-
+<p> visits: {{ visits }}</p> 
 	<head>
 {% if user.is_authenticated %}
 <h1>Rango says... hello {{ user.username }}!</h1>
