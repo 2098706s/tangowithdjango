@@ -80,6 +80,14 @@ def category(request, category_name_slug):
 
     # Create a context dictionary which we can pass to the template rendering engine.
     context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
 
     try:
         # Can we find a category name slug with the given name?
@@ -90,7 +98,7 @@ def category(request, category_name_slug):
 
         # Retrieve all of the associated pages.
         # Note that filter returns >= 1 model instance.
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         # Adds our results list to the template context under name pages.
         context_dict['pages'] = pages
@@ -99,11 +107,13 @@ def category(request, category_name_slug):
         context_dict['category'] = category
         context_dict['category_name_slug'] = category_name_slug
     except Category.DoesNotExist:
-        # We get here if we didn't find the specified category.
-        # Don't do anything - the template displays the "no category" message for us.
+        
         pass
 
-    # Go render the response and return it to the client.
+        if not context_dict['query']:
+             context_dict['query'] = category.name
+
+    
     return render(request, 'rango/category.html', context_dict)
 
 def add_category(request):
@@ -275,3 +285,19 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'pageid' in request.GET:
+            page_id = request.GET['pageid']
+            accessed_page = Page.objects.get(id=page_id)
+            accessed_page.views += 1
+            accessed_page.save()
+            print "views for", accessed_page.url, " = ", accessed_page.views #Remove this
+            return redirect(accessed_page.url)
+        else:
+            print "page_id not in request.GET"
+            return redirect(index)
+    else:
+        print "request.method != GET"
+        return redirect(index)
