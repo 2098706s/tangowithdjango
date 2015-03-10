@@ -7,9 +7,23 @@ from rango.forms import CategoryForm
 from rango.forms import PageForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from rango.bing_search import run_query
 
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
+
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list})
 
 def index(request):
 

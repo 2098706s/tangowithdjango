@@ -40,6 +40,7 @@
 <li><a href="{% url 'auth_login' %}">Login</a></li>
 {% endif %}
 <li><a href="{% url 'about' %}">About</a></li>
+<li><a href="{% url 'search' %}">Search</a></li>
 </ul>
 </div>
 </div>
@@ -68,8 +69,3 @@
 <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
-<!--
-1. Standard Django template commands use { % % } (spaces not included)
-2. Blocks are replaced with page specific content in templates that inherit from this one.
-3. Blocks default to whatever text you place between the block and endblock (ex. the title above)
--->
